@@ -41,7 +41,7 @@ These are the transfer learning models which can be found in the [models](https:
 
 * [Overcoming the problem of repair in structural health monitoring: Metric-informed transfer learning](https://www.sciencedirect.com/science/article/pii/S0022460X21003175)
   * Demonstration of M-JDA on repair scenarios involving a Gnat aircraft
-  * Demo script is [mjda_demo_gnat](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/mjda_demo_gnat.m)
+  * Demo script is [mjda_demo_gnat](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/mjda_demo_gnat.m) and is accompanied by a [readme](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/mjda_demo_gnat.md).
 
 * On the application of kernelised Bayesian transfer learning to population-based structural health monitoring, *in press*
   * Application of KBTL to structural health monitoring applications
