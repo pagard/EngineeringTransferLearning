@@ -17,7 +17,7 @@
 
 ## Demo script
 
-A demo script [mjda_demo_gnat.m](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/mjda_demo_gnat.m) is provided with pre-processed data from the Gnat repair problem in section 6.1 of the [paper](https://www.sciencedirect.com/science/article/pii/S0022460X21003175). Note, results may differ slighlty from the paper due to different random seeds in the training-testing data split.
+A demo script [mjda_demo_gnat.m](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/mjda_demo_gnat.m) is provided that uses pre-processed data from the Gnat repair problem in section 6.1 of the [paper](https://www.sciencedirect.com/science/article/pii/S0022460X21003175). The labelled source data are from the aircraft before a 'repair' procedure is implmented, and the unlabelled target dataset are from after the 'repair' procedure. *Note*, results may differ slighlty from the paper due to different random seeds in the training-testing data split.
 
 Once run you will see two figures - both show the inferred latent space from the M-JDA algorithm, the first figure is the training data, and the second the testing data.
 
