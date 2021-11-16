@@ -35,7 +35,7 @@ These are the transfer learning models which can be found in the [models](https:
   * Development of JDA for an (L+1)-problem, i.e. where the target label space is one greater than the source label space
   * Demo script is underconstruction []()
 
-* [Machine learning at the inferface of structural health monitoring and non-destructive evaluation](https://doi.org/10.1098/rsta.2019.0581) [Open Access](https://pagard.github.io/publications/gardner-2020-d/gardner-2020-d.pdf)
+* [Machine learning at the inferface of structural health monitoring and non-destructive evaluation](https://doi.org/10.1098/rsta.2019.0581) [[Open Access]](https://pagard.github.io/publications/gardner-2020-d/gardner-2020-d.pdf)
   * Application of TCA to ultrasonic inspection
   * Demo script is underconstruction []()
 
@@ -43,6 +43,6 @@ These are the transfer learning models which can be found in the [models](https:
   * Demonstration of M-JDA on repair scenarios involving a Gnat aircraft
   * Demo script is [mjda_demo_gnat.m](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/mjda_demo_gnat.m) and is accompanied by a [readme](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/mjda_demo_gnat.md).
 
-* [On the application of kernelised Bayesian transfer learning to population-based structural health monitoring](https://doi.org/10.1016/j.ymssp.2021.108519) [Open Access](https://pagard.github.io/publications/gardner-2022-a/gardner-2022-a.pdf)
+* [On the application of kernelised Bayesian transfer learning to population-based structural health monitoring](https://doi.org/10.1016/j.ymssp.2021.108519) [[Open Access]](https://pagard.github.io/publications/gardner-2022-a/gardner-2022-a.pdf)
   * Application of KBTL to structural health monitoring applications
   * Demo scripts are [kbtl_demo_binary.m](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/kbtl_demo_binary.m) and [kbtl_demo_multiclass.m](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/kbtl_demo_multiclass.m) and are accompanied by a [readme](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/kbtl_demo.md).
