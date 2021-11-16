@@ -1,4 +1,4 @@
-# KBTL Demo for [On the application of kernelised Bayesian transfer learning to population-based structural health monitoring](https://doi.org/10.1016/j.ymssp.2021.108519) [Open Access](https://pagard.github.io/publications/gardner-2022-a/gardner-2022-a.pdf)
+# KBTL Demo for [On the application of kernelised Bayesian transfer learning to population-based structural health monitoring](https://doi.org/10.1016/j.ymssp.2021.108519) [[Open Access]](https://pagard.github.io/publications/gardner-2022-a/gardner-2022-a.pdf)
 
 ---
 
