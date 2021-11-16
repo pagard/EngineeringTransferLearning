@@ -1,10 +1,35 @@
 function params = kbtl_train_binary(K,y,params)
-% function trains kernelised bayesian transfer learning - binary
-% classification
-
-% rand('state', params.seed); %#ok<RAND>
-%randn('state', params.seed); %#ok<RAND>
-rng(3)
+% Binary kernelised bayesian transfer learning - training
+%
+% Inputs
+% K = cell of kernels from each domain
+% y = cell of binary labels ([-1 or 1]) for each domain
+% params = a structure of hyperparameters
+%          params.lambda.kappa = shape hyperparameter of gamma prior for
+%          projection matrices
+%          params.lambda.theta = shape hyperparameter of gamma prior for
+%          projection matrices
+%          params.gamma.kappa = shape hyperparameter of gamma prior for
+%          bias
+%          params.gamma.theta = shape hyperparameter of gamma prior for
+%          bias
+%          params.eta.kappa = shape hyperparameter of gamma prior for
+%          weights
+%          params.eta.theta = shape hyperparameter of gamma prior for
+%          weights
+%          params.iter = number of iterations
+%          params.margin = size of margin between classes
+%          params.R = latent subspace dimensionality
+%          params.Hsigma2 = variance of latent subspace
+%
+% Ouputs
+% params = a structure of updated hyperparameters 
+%          params.Lambda = inferred projection matrix hyperpriors (.theta .kappa)
+%          params.A = inferred projection matrix distribution (.mu .sig .sig_diag)
+%          params.eta = inferred weight hyperpiors (.theta .kappa)
+%          params.bw = inferred bias and weight distributions (.mu .sig)
+%
+% Paul Gardner, Sheffield University 2019
 
 % check labels are all [-1 +1]
 labs = cellfun(@unique,y,'Uni',0);
@@ -23,10 +48,10 @@ Hsig2 = params.Hsigma2; % prior variance of H
 
 % initalise dimensionality reduction part
 
-% approximate posterior of gamma shape parameters (alpha) and inialise gamma scale
-% parameters (beta)
-Lambda.alpha = cellfun(@(c) (params.lambda.alpha + 0.5)*ones(c,R),N,'Uni',0); % A hyperparameters
-Lambda.beta = cellfun(@(c) params.lambda.beta*ones(c),N,'Uni',0); % A hyperparameters
+% approximate posterior of gamma shape parameters (kappa) and inialise gamma scale
+% parameters (theta)
+Lambda.kappa = cellfun(@(c) (params.lambda.kappa + 0.5)*ones(c,R),N,'Uni',0); % A hyperparameters
+Lambda.theta = cellfun(@(c) params.lambda.theta*ones(c),N,'Uni',0); % A hyperparameters
 
 % intialise A and H
 A.mu = cellfun(@(c) randn(c,R),N,'Uni',0); % initalise A mu as random matrix
@@ -37,12 +62,12 @@ H.sig = cellfun(@(c) eye(R),cell(1,T),'Uni',0); % initalise H sigma as unit vari
 
 % initalise classifier part
 
-% approximate posterior of gamma shape parameters (alpha) and inialise gamma scale
-% parameters (beta)
-gam.alpha = params.gamma.alpha + 0.5; % b hyperparameters
-eta.alpha = (params.eta.alpha + 0.5)*ones(R,1); % w hyperparameters
-gam.beta = params.gamma.beta; % b hyperparameters
-eta.beta = params.eta.beta*ones(R,1); % w hyperparameters
+% approximate posterior of gamma shape parameters (kappa) and inialise gamma scale
+% parameters (theta)
+gam.kappa = params.gamma.kappa + 0.5; % b hyperparameters
+eta.kappa = (params.eta.kappa + 0.5)*ones(R,1); % w hyperparameters
+gam.theta = params.gamma.theta; % b hyperparameters
+eta.theta = params.eta.theta*ones(R,1); % w hyperparameters
 
 % weights and bias
 bw.mu = [0; randn(R,1)]; % initalise mean weights and bias
@@ -67,14 +92,14 @@ for i = 1:params.iter
     
     % update dimensionality reduction part
     
-    % update lamda beta - hyperparameters of projection prior
-    Lambda.beta = cellfun(@(c1,c2) 1./(1./params.lambda.beta + 0.5*(c1.^2 + c2)),A.mu,A.sig_diag,'Uni',0);
+    % update lamda theta - hyperparameters of projection prior
+    Lambda.theta = cellfun(@(c1,c2) 1./(1./params.lambda.theta + 0.5*(c1.^2 + c2)),A.mu,A.sig_diag,'Uni',0);
     
     % update A - projection matrix
     for t = 1:T
         for s = 1:R
             % update A covariance
-            A.sig{t}(:,:,s) = (diag(Lambda.alpha{t}(:,s).*Lambda.beta{t}(:,s)) + KKt{t}/Hsig2)\eye(N{t});
+            A.sig{t}(:,:,s) = (diag(Lambda.kappa{t}(:,s).*Lambda.theta{t}(:,s)) + KKt{t}/Hsig2)\eye(N{t});
             A.sig_diag{t}(:,s) = diag(A.sig{t}(:,:,s)); % store diag
             % update A mean
             A.mu{t}(:,s) = A.sig{t}(:,:,s)*(K{t}*H.mu{t}(s,:)'/Hsig2);
@@ -89,14 +114,14 @@ for i = 1:params.iter
     
     % update classifier part
     
-    % update gamma beta - hyperparameter of bias prior
-    gam.beta = 1/(1/params.gamma.beta + 0.5*(bw.mu(1)^2 + bw.sig(1,1)));
-    % update eta beta - hyperparameters of weight prior
-    eta.beta = 1./(1/params.eta.beta + 0.5*(bw.mu(2:R+1).^2 + diag(bw.sig(2:R+1,2:R+1))));
+    % update gamma theta - hyperparameter of bias prior
+    gam.theta = 1/(1/params.gamma.theta + 0.5*(bw.mu(1)^2 + bw.sig(1,1)));
+    % update eta theta - hyperparameters of weight prior
+    eta.theta = 1./(1/params.eta.theta + 0.5*(bw.mu(2:R+1).^2 + diag(bw.sig(2:R+1,2:R+1))));
     
     % update bias and weights
     % bias and weight covariance
-    bw.sig = [gam.alpha*gam.beta,zeros(1,R);zeros(R,1),diag(eta.alpha.*eta.beta)]; % non-task dependant
+    bw.sig = [gam.kappa*gam.theta,zeros(1,R);zeros(R,1),diag(eta.kappa.*eta.theta)]; % non-task dependant
     bwsig = cellfun(@(c1,c2,c3) [c1, sum(c2,2)';...
         sum(c2,2), c2*c2' + c1*c3],N,H.mu,H.sig,'Uni',0); % create addition for each task
     bw.sig = (bw.sig + sum(cat(3,bwsig{:}),3))\eye(R+1,R+1); % sum all tasks and find inverse
@@ -115,28 +140,8 @@ for i = 1:params.iter
     f.mu = cellfun(@(c1,c2,c3,c4) c1 + (normpdf(c2)-normpdf(c3))./c4,q_f_mu,alpha_tn,beta_tn,Z,'Uni',0); % f mean through truncated normal
     f.sig = cellfun(@(c1,c2,c3) 1 + (c1.*normpdf(c1) - c2.*normpdf(c2))./c3 - ((normpdf(c1)-normpdf(c2))./c3).^2,alpha_tn,beta_tn,Z,'Uni',0); % f sigma through truncated normal
     
-    % variational lower bound - check equations
-    %     logQLambda =
-    logQA = 0;
-    for t = 1:T
-        for s = 1:R
-            RAsig = chol(A.sig{t}(:,:,s));
-            logQA = logQA + 0.5*(R+1)*(1+log(2*pi)) + sum(log(diag(RAsig)));
-        end
-    end
-    RHsig = cellfun(@(c) chol(c),H.sig,'Uni',0);
-    logQH = cellfun(@(c) 0.5*(R+1)*(1+log(2*pi)) + sum(log(diag(c))),RHsig,'Uni',0);
-    logQH = sum(cat(1,logQH{:}),1);
-    
-    logQgamma = (gam.alpha-1)*psi(gam.alpha) - log(gam.beta) + gam.alpha + log(gamma(gam.alpha));
-    logQeta = sum((eta.alpha-1).*psi(eta.alpha) - log(eta.beta) + eta.alpha + log(gamma(eta.alpha)));
-    RbwSig = chol(bw.sig);
-    logQbw = 0.5*(R+1)*(1+log(2*pi)) + sum(log(diag(RbwSig)));
-    %     logQf =
-    %
-    logQtheta = logQA + logQH + logQgamma + logQeta + logQbw;
-    if mod(i,5) == 0
-        fprintf(1,'Iteration: %5d Lower Bound: %4.5f \n', i,logQtheta);
+    if mod(i,10) == 0
+        fprintf(1,'Iteration: %5d \n', i);
     end
     
 end

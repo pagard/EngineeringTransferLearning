@@ -1,6 +1,43 @@
 function pred = kbtl_test(K,params,y)
-% function creates predictions form kernelised bayesian transfer learning
-% multi-class classification
+% Multi-class kernelised bayesian transfer learning - testing
+%
+% Inputs
+% K = cell of kernels from each domain
+% Y = cell of class numeric labels for each domain (these get converted to
+% [-1 +1] N x L matrix) or cell of labels in N x L matrix form
+% params = a structure of hyperparameters
+%          params.lambda.kappa = shape hyperparameter of gamma prior for
+%          projection matrices
+%          params.lambda.theta = shape hyperparameter of gamma prior for
+%          projection matrices
+%          params.gamma.kappa = shape hyperparameter of gamma prior for
+%          bias
+%          params.gamma.theta = shape hyperparameter of gamma prior for
+%          bias
+%          params.eta.kappa = shape hyperparameter of gamma prior for
+%          weights
+%          params.eta.theta = shape hyperparameter of gamma prior for
+%          weights
+%          params.iter = number of iterations
+%          params.margin = size of margin between classes
+%          params.R = latent subspace dimensionality
+%          params.Hsigma2 = variance of latent subspace
+%          params.Lambda = inferred projection matrix hyperpriors (.theta .kappa)
+%          params.A = inferred projection matrix distribution (.mu .sig .sig_diag)
+%          params.eta = inferred weight hyperpiors (.theta .kappa)
+%          params.bw = inferred bias and weight distributions (.mu .sig)
+%
+% Outputs
+% pred = a structure containing the predictive variables
+%       pred.H.mu = mean predictive latent space
+%       pred.f = mean predictive function (.mu .sig)
+%       pred.py = probability of +1 class
+%       pred.ymap = MAP estimate of class label
+% if y is known
+%       pred.acc = prediction accuracy
+%       pred.f1 = prediction f1 score
+%
+% Paul Gardner, Sheffield University 2019
 
 % size of test domains
 T = length(K); % no. of tasks
@@ -66,6 +103,7 @@ end
 
 % performance metrics
 if nargin == 3 && all(Ls==1)
+    addpath('..\util')
     pred.acc = cellfun(@(c1,c2) 100*(length(find(c1==c2))./length(c2)),pred.ymap,y); % accuracy
     pred.f1 = cellfun(@(c1,c2) f1score(c1,c2),pred.ymap,y); % f1 macro
 end

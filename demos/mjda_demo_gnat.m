@@ -2,6 +2,8 @@
 % Overcoming the problem of repair in structural health monitoring: 
 % Metric-informed transfer learning
 %
+% Paul Gardner, Sheffield University 2021
+%
 % note results might vary slighlty from the paper due to different random
 % seeds in the training-testing split
 

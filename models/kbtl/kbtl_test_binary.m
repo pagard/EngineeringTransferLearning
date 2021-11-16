@@ -1,6 +1,42 @@
 function pred = kbtl_test_binary(K,params,y)
-% function creates predictions form kernelised bayesian transfer learning
-% binary classification
+% Binary kernelised bayesian transfer learning - testing
+%
+% Inputs
+% K = cell of kernels from each domain
+% y = cell of binary labels ([-1 or 1]) for each domain
+% params = a structure of hyperparameters
+%          params.lambda.kappa = shape hyperparameter of gamma prior for
+%          projection matrices
+%          params.lambda.theta = shape hyperparameter of gamma prior for
+%          projection matrices
+%          params.gamma.kappa = shape hyperparameter of gamma prior for
+%          bias
+%          params.gamma.theta = shape hyperparameter of gamma prior for
+%          bias
+%          params.eta.kappa = shape hyperparameter of gamma prior for
+%          weights
+%          params.eta.theta = shape hyperparameter of gamma prior for
+%          weights
+%          params.iter = number of iterations
+%          params.margin = size of margin between classes
+%          params.R = latent subspace dimensionality
+%          params.Hsigma2 = variance of latent subspace
+%          params.Lambda = inferred projection matrix hyperpriors (.theta .kappa)
+%          params.A = inferred projection matrix distribution (.mu .sig .sig_diag)
+%          params.eta = inferred weight hyperpiors (.theta .kappa)
+%          params.bw = inferred bias and weight distributions (.mu .sig)
+%
+% Outputs
+% pred = a structure containing the predictive variables
+%       pred.H.mu = mean predictive latent space
+%       pred.f = mean predictive function (.mu .sig)
+%       pred.py = probability of +1 class
+%       pred.ymap = MAP estimate of class label
+% if y is known
+%       pred.acc = prediction accuracy
+%       pred.f1 = prediction f1 score
+%
+% Paul Gardner, Sheffield University 2019
 
 % size of test domains
 N = cellfun(@(c) size(c,2),K,'Uni',0); % no. of points (K in R^NxN)
@@ -32,7 +68,7 @@ pred.ymap = cellfun(@(c1,c2) ones(c1,1)-2*c2,N,map_minus,'Uni',0); % map estimat
 
 % performance metrics
 if nargin == 3
-    addpath('...\util')
+    addpath('..\util')
     pred.acc = cellfun(@(c1,c2) 100*(length(find(c1==c2))./length(c2)),pred.ymap,y); % accuracy
     pred.f1 = cellfun(@(c1,c2) f1score(c1,c2),pred.ymap,y); % f1 macro
 end
