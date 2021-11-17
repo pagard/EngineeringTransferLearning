@@ -23,7 +23,8 @@ These are the transfer learning models which can be found in the [models](https:
 * Heterogeneous transfer learning
   * [Kernelised Bayesian transfer learning (KBTL)](https://users.ics.aalto.fi/gonen/files/gonen_aaai14_paper.pdf)
 
-**Please cite the linked method papers if you use this code, as well as any corresponding application papers.**
+*Please cite the linked method papers if you use this code, as well as any corresponding application papers.*
+
 ---
 
 ## Applications and demo files
