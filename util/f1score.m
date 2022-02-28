@@ -23,4 +23,5 @@ pre = TP./(TP+FP); % precision
 rec = TP./(TP+FN); % recall
 
 f1_c = 2.*(pre.*rec)./(pre+rec); % f1 score per class
+f1_c(isnan(f1_c)) = 0; % catch for 0/0
 f1 = mean(f1_c); % marco f1 score

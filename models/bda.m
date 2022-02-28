@@ -23,7 +23,7 @@ function [Zs,Zt,Ytp,W,cls,fscore,mmd] = bda(Xs,Ys,Xt,kern,hyp,mu,k,lambda,classi
 % cls = parameters of classifier
 % mmd = mmd distance of transformed space
 
-% Paul Gardner, Sheffield University 2021
+% Paul Gardner, University of Sheffield 2021
 
 ns = size(Xs,1); % length of source data
 nt = size(Xt,1); % length of target data

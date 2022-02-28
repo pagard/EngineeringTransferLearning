@@ -2,7 +2,7 @@
 % On the application of kernelised Bayesian transfer learning to
 % population-based structural health monitoring
 %
-% Paul Gardner, Sheffield University 2021
+% Paul Gardner, University of Sheffield 2021
 %
 % note results might vary slighlty from the paper due to different random
 % seeds in the random initialisation of KBTL
