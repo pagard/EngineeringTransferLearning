@@ -1,6 +1,5 @@
-function [Ytp,classifier] = classifierGMM_EM(Zs,ks,Zt,classifier)
-% (Unsupervised) Expectation maximisation (EM) Gaussian mixture model
-% (maximum likelihood estimates)
+function [Ytp,classifier] = classifierGMM(Zs,Ys,Zt,classifier)
+% (Supervised)Gaussian mixture model (maximum likelihood estimates)
 %
 % Inputs 
 % Zs = source data
@@ -13,8 +12,8 @@ function [Ytp,classifier] = classifierGMM_EM(Zs,ks,Zt,classifier)
 % classifier = trained classifier
 
 if nargin <4
-    % Train unsupervised GMM Classifier
-    classifier = gmm_mle_em(Zs,ks);
+    % Train supervised GMM Classifier
+    classifier = gmm_mle(Zs,Ys);
 end
 
 % Predict

@@ -49,10 +49,10 @@ These are the transfer learning models which can be found in the [models](https:
   * Application of KBTL to multiple structural health monitoring applications; numerical and experimental shear buildings, an aircraft wing with different sensor configurations, and numerical and experimental eight degree-of-freedom structures with differing signal properties
   * Demo scripts are [kbtl_demo_binary.m](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/kbtl_demo_binary.m) and [kbtl_demo_multiclass.m](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/kbtl_demo_multiclass.m) and are accompanied by a [readme](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/kbtl_demo.md)
 
-* [A population-based SHM methodology for heterogeneous structures: Transferring damage localisation knowledge between different aircraft wings](https://doi.org/10.1007/s13349-022-00565-5) [[Open Access]](https://pagard.github.io/publications/gardner-2022-b/gardner-2022-b.pdf)
+* [A population-based SHM methodology for heterogeneous structures: Transferring damage localisation knowledge between different aircraft wings](https://doi.org/10.1016/j.ymssp.2022.108918) [[Open Access]](https://pagard.github.io/publications/gardner-2022-b/gardner-2022-b.pdf)
   * A population-based methodology for performing damage localisation on two heterogeneous aircraft wings. The demo files demonstrate the abstract graphical representations, distance metrics and transfer learning for the four maximum common subgraphs (see paper).
   * Demo scripts are [gnat_piper_graph_visualisation.m](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/gnat_piper_graph_visualisation.m) and [gnat_piper_demo.m](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/gnat_piper_demo.m) and are accompanied by a [readme](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/gnat_piper_demo.md)
 
-* [Domain‑adapted Gaussian mixture models for population‑based structural health monitoring](https://doi.org/10.1016/j.ymssp.2022.108918)
+* [Domain‑adapted Gaussian mixture models for population‑based structural health monitoring](https://doi.org/10.1007/s13349-022-00565-5)
   * Development of the DA-GMM and demonstration on two real world bridge datasets.
   * Demo scripts are [dagmm_em_demo.m](https://github.com/pagard/EngineeringTransferLearning/blob/main/demos/dagmm_em_demo.md)

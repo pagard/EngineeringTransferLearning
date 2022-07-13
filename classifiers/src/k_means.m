@@ -3,13 +3,13 @@ function [classifier,Y] = k_means(X,K,tol,plt)
 %
 % Inputs
 % X = inputs (n*d)
-% k = no. of components
+% K = no. of components
 % tol = convergence tolerance on means
 % plt = 0 - no plot
 %
 % Outputs
 % classifier = structure of k-means parameters
-%   classifier.mu = means of clusters (k*d)
+%   classifier.mu = means of clusters (K*d)
 % Y = label predictions
 % 
 % Paul Gardner, University of Sheffield 2022

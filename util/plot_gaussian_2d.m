@@ -44,5 +44,6 @@ for i = 1:k
     plot(X(i,:),Y(i,:),'k-')
 end
 hold off
+legend(arrayfun(@num2str,1:k,'UniformOutput',0))
 
 end

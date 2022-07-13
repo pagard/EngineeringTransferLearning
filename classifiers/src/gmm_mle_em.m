@@ -1,4 +1,4 @@
-function [classifier,Y] = gmm_mle_em(X,k,tol,method,plt)
+function [classifier,Y] = gmm_mle_em(X,K,tol,method,plt)
 % Unsupervised Gaussian mixture model using EM and maximum likelihood
 % estimates
 %
@@ -38,52 +38,53 @@ if method == 0
     % random initialise
     ind = randperm(n);
     
-    % evenly split data randomly and assign initial guess and mean and
-    % covariance
-    mu = X(ind(1:k),:);
+    % randomly assign initial guess to mean 
+    mu = X(ind(1:K),:);
 else
     % k-means initialise
-    kmeans = k_means(X,k);
+    kmeans = k_means(X,K,1);
     mu = kmeans.mu;
 end
-sigma = repmat(eye(d),1,1,k);
+sigma = repmat(eye(d),1,1,K); % initial unity covariance
 
 % mixing proportion
-lambda = ones(1,k)/k;
+lambda = ones(1,K)/K;
 
-log_lik = [];
-while length(log_lik)<3 || abs(sum(log_lik(end)-log_lik(end-2:end))) > tol
+lml = [];
+while length(lml)<3 || abs(sum(lml(end)-lml(end-2:end))) > tol
+
+    % E-step  
     
-    % E-step
-    lml = 0;
-    log_r = nan(n,k);
-    for i = 1:n
-        pi_Nk = nan(1,k);
-        for j = 1:k
-            pi_Nk(j) = log(lambda_mle(j)) + ...
-                lnmvnpdf(X(i,:),mu(j,:),sigma(:,:,j)); % pi_k*N_k(x_i|mu_k,sigma_k)
-        end
-        lml = lml + log(sum(exp(pi_Nk))); % log likelihood
-        log_r(i,:) = pi_Nk - log(sum(exp(pi_Nk-max(pi_Nk)))) - max(pi_Nk); % log responsibility using log sum exp trick
+    % Gaussian likelihood per class
+    ln_lik = nan(n,K);
+    for k = 1:K
+        ln_lik(:,k) = lnmvnpdf(X,mu(k,:),...
+            sigma(:,:,k)); % N_k(x_i|mu_k,sigma_k)
     end
-    r = exp(log_r); % responsibility r: p(y | x, D)
-    
-    log_lik = [log_lik, -lml]; % add new log likelihood
+    ln_lik = log(lambda) + ln_lik; % mixture likelihood, pi_k*N_k(x_i|mu_k,sigma_k)
 
+    ln_r = ln_lik - log(sum(exp(ln_lik - max(ln_lik,[],2)),2)) ...
+        - max(ln_lik,[],2); % log responsibilities
+    r = exp(ln_r); % responsibilities, p(y | x, D)
+    
+    [~,Y] = max(r,[],2); % label predictions (mle) 
+    
+    lml = [lml, sum(log(sum(exp(ln_lik),2)))]; % log likelihood
+    
     % M-step
-    lambda_mle = mean(r); % mixture component update
     
-    for i = 1:k
-        mu(i,:) = sum(r(:,i).*X)./sum(r(:,i)); % mean
-        
-        sigma_k = zeros(d,d);
-        Xdiff = bsxfun(@minus,X,mu(i,:)); % difference between data and mean
-        for j = 1:n
-            sigma_k = sigma_k + r(j,i).*(Xdiff(j,:)'*Xdiff(j,:));
-        end        
-        sigma(:,:,i) = sigma_k./sum(r(:,i)); % covariance
+    % update mixture components
+    lambda = mean(r); 
+    
+    Nk = sum(r,1); % counts
+    
+    % update mean
+    mu = r'*X./Nk';
+    
+    for k = 1:K
+        sigma(:,:,k) = 1/Nk(k)*(r(:,k).*(X-mu(k,:)))'*(X-mu(k,:)); % covariance update
     end
-    
+        
     % plot if plot on
     if plt ~= 0
         figure(100)
@@ -95,8 +96,16 @@ while length(log_lik)<3 || abs(sum(log_lik(end)-log_lik(end-2:end))) > tol
             plot_gaussian_2d(mu,sigma);
             subplot(1,2,1)
         end
-        plot(1:length(log_lik),log_lik,'k-') % plot likelihood for 
+        plot(1:length(lml),lml,'k-') % plot likelihood for
         % convergence monitoring
+        xlabel('Iteration')
+        ylabel('Log Likelihood')
     end
     
 end
+
+% pack classifier
+classifier.mu = mu;
+classifier.sigma = sigma;
+classifier.lambda = lambda;
+classifier.K = K;
